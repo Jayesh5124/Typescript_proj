@@ -1,59 +1,76 @@
-// class Calculator {
-//     add(a: number, b: number): number {
-//         return a + b;
-//     }
+const readline = require('readline');
 
-//     subtract(a: number, b: number): number {
-//         return a - b;
-//     }
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
 
-//     multiply(a: number, b: number): number {
-//         return a * b;
-//     }
+let currentResult = 0;
 
-//     divide(a: number, b: number): number | string {
-//         if (b === 0) {
-//             return 'Error: Division by zero is not allowed.';
-//         }
-//         return a / b;
-//     }
-// }
-
-// // Example usage
-// const calculator = new Calculator();
-
-// console.log('Addition:', calculator.add(5, 3));            
-// console.log('Subtraction:', calculator.subtract(5, 3));    
-// console.log('Multiplication:', calculator.multiply(5, 3)); 
-// console.log('Division:', calculator.divide(5, 0));         
-// console.log('Division:', calculator.divide(5, 2));         
-
-// Basic Calculator using  Functions
-
-function add(a: number, b: number): number {
+function add(a, b) {
     return a + b;
 }
 
-function subtract(a: number, b: number): number {
+function subtract(a, b) {
     return a - b;
 }
 
-function multiply(a: number, b: number): number {
+function multiply(a, b) {
     return a * b;
 }
 
-function divide(a: number, b: number): number | string {
+function divide(a, b) {
     if (b === 0) {
-        return 'Error: Division by zero is not allowed.';
+        throw new Error('Error: Division by zero is not allowed.');
     }
     return a / b;
 }
 
-const a = 10;
-const b = 5;
+// Function to ask for the next operation
+function askForOperation() {
+    rl.question('Choose an operation (add, subtract, multiply, divide) or type "exit" to quit: ', (operation) => {
+        if (operation === 'exit') {
+            console.log('Calculator exited.');
+            rl.close();
+            return;
+        }
 
-console.log('Addition:', add(a, b));            
-console.log('Subtraction:', subtract(a, b));    
-console.log('Multiplication:', multiply(a, b)); 
-console.log('Division:', divide(a, b));         
-console.log('Division by zero:', divide(a, 0)); 
+        rl.question('Enter a number: ', (input) => {
+            const number = parseFloat(input);
+            if (isNaN(number)) {
+                console.log('Please enter a valid number.');
+                askForOperation(); // Ask for operation again
+                return;
+            }
+
+            try {
+                switch (operation) {
+                    case 'add':
+                        currentResult = add(currentResult, number);
+                        break;
+                    case 'subtract':
+                        currentResult = subtract(currentResult, number);
+                        break;
+                    case 'multiply':
+                        currentResult = multiply(currentResult, number);
+                        break;
+                    case 'divide':
+                        currentResult = divide(currentResult, number);
+                        break;
+                    default:
+                        console.log('Invalid operation. Please try again.');
+                        break;
+                }
+                console.log('Current Result:', currentResult);
+                askForOperation(); // Ask for the next operation
+            } catch (error) {
+                console.log(error.message);
+                askForOperation(); // Ask for operation again
+            }
+        });
+    });
+}
+
+// Start the calculator
+console.log('Welcome to the Calculator!');
+askForOperation();

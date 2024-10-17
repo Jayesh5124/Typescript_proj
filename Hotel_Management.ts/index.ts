@@ -26,3 +26,4 @@ hotelSystem.bookRoom("Hotel California", 1);
 // Check available rooms after booking
 const availableRoomsAfterBooking = hotelSystem.findAvailableRooms("Hotel California");
 console.log("Available Rooms After Booking:", availableRoomsAfterBooking);
+ 
